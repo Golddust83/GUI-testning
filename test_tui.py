@@ -10,11 +10,9 @@ class TestTUI(TestCase):
     """
     Things to test in this class:
 
+    # Product can be found in dropdown
     # The main shop page loads
     # A single product page loads
-    # A customer can add a product to their cart
-    # The cart page loads
-    # A customer can reach the checkout page
     # Customer service page - chat
     """
 
