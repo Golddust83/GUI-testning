@@ -66,7 +66,7 @@ class TestTUI(TestCase):
         # Test that URL now contains "swim-up"
         self.assertIn("swim-up", self.driver.current_url)
 
-    def test_single_product_page(self):
+    def test_single_product_page(self):  # Testat och klart!
         # Find "Resmål" dropdown
         self.resmål = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[6]/div/a/span[1]").click()
