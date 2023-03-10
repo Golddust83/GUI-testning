@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable
+import time
 
 
 class TestTUI(TestCase):
@@ -16,19 +19,25 @@ class TestTUI(TestCase):
     # Customer service page - chat
     """
 
-    # Including explicit wait
-    # WebDriverWait(self.driver, 10).until(expected_conditions.alert_is_present("element"))
-
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.get("https://www.tui.se/")
         self.driver.maximize_window()
+        # Including explicit wait to be able to close cookie alert
+        WebDriverWait(self.driver, 10).until(lambda d: d.find_element(By.ID, "cmCloseBanner"))
+        self.cookies = self.driver.find_element(
+            By.ID, "cmCloseBanner").click()
         
-    def test_load_site(self):
-        # Test that TUI is part of the URL
+    def test_load_site(self): # Testad och klar!
+        """
+        Testing that TUI is part of the URL
+        """
         self.assertIn("tui", self.driver.current_url)
 
     def test_dropdown(self):
+        """
+        Testing that "Charterresor" is present in the "Resor" dropdown 
+        """
         # Find "Resor" dropdown
         self.resor = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div/a/span[1]")
@@ -45,7 +54,10 @@ class TestTUI(TestCase):
         self.assertTrue(
             item_found, f"{item_to_check} is not present in the dropdown menu.")
 
-    def test_main_shop_page(self):
+    def test_main_shop_page(self): # Testad och klar!
+        """
+        Testing that "Swim up" hotel product exist 
+        """
         # Find "Resor" dropdown
         self.resor = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div/a/span[1]")
@@ -66,7 +78,10 @@ class TestTUI(TestCase):
         # Test that URL now contains "swim-up"
         self.assertIn("swim-up", self.driver.current_url)
 
-    def test_single_product_page(self):  # Testat och klart!
+    def test_single_product_page(self):  # Testad och klar!
+        """
+        Testing that explicit product exist on product page
+        """
         # Find "Resmål" dropdown
         self.resmål = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[6]/div/a/span[1]").click()
@@ -83,8 +98,7 @@ class TestTUI(TestCase):
 
     def test_chat(self):
         """
-        Hittat på ett nytt test eftersom man testar både adding to cart, cart page och checkout page samtidigt 
-        = blir för få test
+        Testing the "Kundservice" link and that you can use the chat
         """
         # Find "Kundservice" link
         self.customer_service = self.driver.find_element(
