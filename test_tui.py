@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
 import time
 
@@ -40,21 +39,19 @@ class TestTUI(TestCase):
         """
         # Find "Resor" dropdown
         self.resor = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div/a/span[1]")
-        # Loops through all the options in the dropdown
-        options = self.resor.find_elements(By.XPATH, ".//option")
-
-        item_to_check = "Charterresor"
-        item_found = False
-        for option in options:
-            if option.text == item_to_check:
-                item_found = True
-                break
-
+            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div[1]/a")
+        # Create an instance of ActionChains and pass in the driver
+        self.action_chains = ActionChains(self.driver)
+        # Move the mouse to hover over the element
+        self.action_chains.move_to_element(self.resor).perform()
+        # Find "Charterresor" in dropdown
+        self.charterresor = self.driver.find_element(
+            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div[1]/section/div/div/div/div[2]/section/div/div/ul/li[2]/a").click()
+        # Test that URL now contains "charter"
         self.assertTrue(
-            item_found, f"{item_to_check} is not present in the dropdown menu.")
+            "charter" in self.driver.current_url, f"{self.charterresor} is not present in the dropdown menu.")
 
-    def test_main_shop_page(self): # Testad och klar!
+    def test_main_shop_page(self): 
         """
         Testing that "Swim up" hotel product exist 
         """
@@ -78,7 +75,7 @@ class TestTUI(TestCase):
         # Test that URL now contains "swim-up"
         self.assertIn("swim-up", self.driver.current_url)
 
-    def test_single_product_page(self):  # Testad och klar!
+    def test_single_product_page(self):
         """
         Testing that explicit product exist on product page
         """
@@ -96,7 +93,7 @@ class TestTUI(TestCase):
             By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/h1/span")
         self.assertTrue(self.hotel_Tanzania.is_displayed(), "Product not found under header.")
 
-    def test_chat(self):
+    def test_chat(self): # Enda testet som inte fungerar!
         """
         Testing the "Kundservice" link and that you can use the chat
         """
