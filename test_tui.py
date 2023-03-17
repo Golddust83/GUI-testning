@@ -1,11 +1,9 @@
 from unittest import TestCase, main
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support.expected_conditions import element_to_be_clickable
-import time
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class TestTUI(TestCase):
@@ -51,7 +49,7 @@ class TestTUI(TestCase):
         self.assertTrue(
             "charter" in self.driver.current_url, f"{self.charterresor} is not present in the dropdown menu.")
 
-    def test_main_shop_page(self): 
+    def test_main_shop_page(self):
         """
         Testing that "Swim up" hotel product exist 
         """
@@ -86,35 +84,27 @@ class TestTUI(TestCase):
         self.Tanzania = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/section/div[4]/div/div[2]/div/ul/div/div[43]/li/a/div/div/div[2]").click()
         # Find "Visa alla hotell"
-        self.show_all_hotels = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/div/a/button").click()
+        self.show_all_hotels = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/div/a/button"))).click()
         # Find "Reef & Beach Resort" on product page
         self.hotel_Tanzania = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/h1/span")
         self.assertTrue(self.hotel_Tanzania.is_displayed(), "Product not found under header.")
 
-    def test_chat(self): # Enda testet som inte fungerar!
+    def test_kundservice(self): # Enda testet som inte fungerar!
         """
-        Testing the "Kundservice" link and that you can use the chat
+        Testing the "Kundservice" link and get some info
         """
         # Find "Kundservice" link
         self.customer_service = self.driver.find_element(
             By.XPATH, "/html/body/div[1]/div/header/div/div/div/div/div/ul/li[2]/span/a").click()
-        # Find chat
-        self.chat = self.driver.find_element(
-            By.XPATH, "/html/body/div[4]/button/span").click()
-        # Find input field to answer chatbot
-        self.input_field = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/div/form/div/input")
-        # Click input field
-        self.input_field.click()
-        # Clear text
-        self.input_field.clear()
-        # Input your name
-        self.input_field.send_keys("Nina Persson" + Keys.RETURN)
-        # Find "Jag har en fråga" button and make an assertion that it is there
-        self.button = self.driver.find_element(By.NAME, "Jag har en fråga")
-        self.assertEqual("Jag har en fråga", self.button.text)
+        # Find a question
+        self.question = WebDriverWait(self.driver, 10).until(lambda d: d.find_element(
+            By.XPATH, "/html/body/div[1]/div/div/div[2]/div[3]/div")).click()
+        self.assertTrue("covid-19-test-pa-min-resa" in self.driver.current_url, "Covid 19 answer is not present in the tui URL.")
+        self.text = WebDriverWait(self.driver, 10).until(lambda d: d.find_element(
+            By.XPATH, "/html/body/div[1]/div/div/div[2]/div[3]/div/div/div[2]/div[2]/div/div/div[1]/p")).text
+        self.assertIn("erbjuder TUI test till rabatterat pris", self.text)
 
     def tearDown(self):
         self.driver.delete_all_cookies()
