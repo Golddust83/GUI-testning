@@ -25,7 +25,7 @@ class TestTUI(TestCase):
         self.cookies = self.driver.find_element(
             By.ID, "cmCloseBanner").click()
         
-    def test_load_site(self): # Testad och klar!
+    def test_load_site(self):
         """
         Testing that TUI is part of the URL
         """
@@ -36,8 +36,8 @@ class TestTUI(TestCase):
         Testing that "Charterresor" is present in the "Resor" dropdown 
         """
         # Find "Resor" dropdown
-        self.resor = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div[1]/a")
+        self.resor = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div[1]/a"))).click()
         # Create an instance of ActionChains and pass in the driver
         self.action_chains = ActionChains(self.driver)
         # Move the mouse to hover over the element
@@ -54,8 +54,8 @@ class TestTUI(TestCase):
         Testing that "Swim up" hotel product exist 
         """
         # Find "Resor" dropdown
-        self.resor = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div/a/span[1]")
+        self.resor = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[1]/div/a/span[1]")))
         # Create an instance of ActionChains and pass in the driver
         self.action_chains = ActionChains(self.driver)
         # Move the mouse to hover over the element
@@ -78,26 +78,27 @@ class TestTUI(TestCase):
         Testing that explicit product exist on product page
         """
         # Find "Resmål" dropdown
-        self.resmål = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[6]/div/a/span[1]").click()
+        self.resmål = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/header/div/div/section/div/ul/li[6]/div/a/span[1]")))
+        self.resmål.click()
         # Find Tanzania
-        self.Tanzania = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/section/div[4]/div/div[2]/div/ul/div/div[43]/li/a/div/div/div[2]").click()
+        self.Tanzania = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/section/div[4]/div/div[2]/div/ul/div/div[43]/li/a/div/div/div[2]"))).click()
         # Find "Visa alla hotell"
         self.show_all_hotels = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
             By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/div/a/button"))).click()
         # Find "Reef & Beach Resort" on product page
-        self.hotel_Tanzania = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/h1/span")
+        self.hotel_Tanzania = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH, "/html/body/div[1]/div/section/div[2]/div/div/h1/span"))).click()
         self.assertTrue(self.hotel_Tanzania.is_displayed(), "Product not found under header.")
 
-    def test_kundservice(self): # Enda testet som inte fungerar!
+    def test_kundservice(self):
         """
         Testing the "Kundservice" link and get some info
         """
         # Find "Kundservice" link
-        self.customer_service = self.driver.find_element(
-            By.XPATH, "/html/body/div[1]/div/header/div/div/div/div/div/ul/li[2]/span/a").click()
+        self.customer_service = WebDriverWait(self.driver, 10).until(lambda d: d.find_element(
+            By.XPATH, "/html/body/div[1]/div/header/div/div/div/div/div/ul/li[2]/span/a")).click()
         # Find a question
         self.question = WebDriverWait(self.driver, 10).until(lambda d: d.find_element(
             By.XPATH, "/html/body/div[1]/div/div/div[2]/div[3]/div")).click()
@@ -105,7 +106,7 @@ class TestTUI(TestCase):
         self.text = WebDriverWait(self.driver, 10).until(lambda d: d.find_element(
             By.XPATH, "/html/body/div[1]/div/div/div[2]/div[3]/div/div/div[2]/div[2]/div/div/div[1]/p")).text
         self.assertIn("erbjuder TUI test till rabatterat pris", self.text)
-
+        
     def tearDown(self):
         self.driver.delete_all_cookies()
         self.driver.quit()
