@@ -1,7 +1,7 @@
 pipeline {
     agent { label "built-in" }
     stages {
-        stage("Run test") {
+        stage("Running tests") {
             steps {
                 bat "python -m unittest test_tui"
                 echo "Testing" 
